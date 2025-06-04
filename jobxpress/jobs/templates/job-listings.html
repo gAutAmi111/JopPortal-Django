@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+
+    <main>
+        <!-- Header Section -->
+        <header class="site-header">
+            <div class="section-overlay"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-12 text-center">
+                        <h1 class="text-white">Job Listings</h1>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb justify-content-center">
+                                <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Job Listings</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+
+        <section class="job-section recent-jobs-section section-padding">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 col-12 mb-1">
+                        <h2>Open Roles <span class="job-badge">Now Hiring!</span></h2>
+                        <p>
+                            <strong>Over 10k opening jobs</strong> Join our dynamic team to work on innovative projects, grow your skills, and make a real impact. From engineering to design, we have roles for passionate professionals ready to shape the future.
+                            
+                        </p>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    {% for x in allcompany %}
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="job-thumb job-thumb-box">
+                            <div class="job-image-box-wrap">
+                                <a href="{% url 'job_details' x.id %}">
+                                    <img src="{{ x.photo.url }}" class="job-image img-fluid" alt="{{ x.title }}" />
+                                </a>
+
+                                <div class="job-image-box-wrap-info d-flex align-items-center">
+                                    <p class="mb-0">
+                                        <a href="{% url 'job_details' x.id %}" class="badge badge-level">{{ x.job_type }}</a>
+                                    </p>
+
+                                </div>
+                            </div>
+
+                            <div class="job-body">
+                                <h4 class="job-title">
+                                    <a href="{% url 'job_details' x.id %}" class="job-title-link">{{ x.title }}</a>
+                                </h4>
+
+                                <div class="d-flex align-items-center">
+                                    <div class="job-image-wrap d-flex align-items-center bg-white shadow-lg mt-2 mb-4">
+                                        <img src="{{ x.logo.url }}" class="job-image me-3 img-fluid" alt="{{ x.employer.cname }}" />
+                                        <p class="mb-0">{{ x.employer.cname }}</p>
+                                    </div>
+
+                                    <a href="#" class="bi-bookmark ms-auto me-2"></a>
+                                    <a href="#" class="bi-heart"></a>
+                                </div>
+
+                                <div class="d-flex align-items-center">
+                                    <p class="job-location">
+                                        <i class="custom-icon bi-geo-alt me-1"></i>
+                                        {{ x.location }}
+                                    </p>
+                                    <p class="job-date">
+                                        <i class="custom-icon bi-clock me-1"></i>
+                                        {{ x.created_at|timesince }} ago
+                                    </p>
+                                </div>
+
+                                <div class="d-flex align-items-center border-top pt-3">
+                                    <p class="job-price mb-0">
+                                        <i class="custom-icon bi-cash me-1"></i>
+                                        ₹{{ x.salary_max }}
+                                    </p>
+                                    <a href="{% url 'applyform' x.id %}" class="custom-btn btn ms-auto">Apply now</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12">
+                        <p>No jobs available at the moment.</p>
+                    </div>
+                    {% endfor %}
+
+
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Call to Action Section -->
+        <section class="cta-section">
+            <div class="section-overlay"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-10">
+                        <h2 class="text-white mb-2">Over 10k opening jobs</h2>
+                        <p class="text-white">JobXpress – Your #1 Job Portal!
+Find your dream job or the perfect hire. Fast, reliable, and easy—JobXpress delivers opportunities that matter.</p>
+                    </div>
+                    <div class="col-lg-4 col-12 ms-auto">
+                        <div class="custom-border-btn-wrap d-flex align-items-center mt-lg-4 mt-2">
+                            <a href="{% url 'signup' 'user' %}" class="custom-btn custom-border-btn btn me-4">Create an account</a>
+                            <a href="#" class="custom-link">Post a job</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+<style>
+h2 {
+    font-size: 2em;
+    color: #333;
+    font-family: Arial, sans-serif;
+    display: inline-flex;
+    align-items: center;
+}
+
+.job-badge {
+    display: inline-block;
+    background: #007bff;
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 14px;
+    font-size: 0.85em;
+    font-weight: bold;
+    margin-left: 12px;
+    transition: background-color 0.3s ease;
+    animation: scalePulse 1.8s infinite ease-in-out;
+}
+
+.job-badge:hover {
+    background:rgb(238, 72, 50);
+    cursor: pointer;
+}
+
+
+.job-badge:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+@keyframes scalePulse {
+    0%, 100% { transform: scale(1); }
+    30% { transform: scale(1.10); }
+}
+</style>
+{% endblock %}
+

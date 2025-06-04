@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+
+
+    <main>
+<h2 class="text-center text-white bg-purple py-3">Apply Now</h2>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-12 col-md-9">
+                <div class="card hero-form-login text-white shadow-sm my-5">
+
+{% if messages %}
+					<div class="col-md-12 text-center mb-3" style="background-color:#008000; border-radius: 20px;">
+						{% for msg in messages %}
+						<div style="color: #ffffff;padding: 20px;">
+							{{ msg }}
+						</div>
+						{% endfor %}
+					</div>
+				{% endif %}
+                
+                    <form class="custom-form hero-form-login-inner" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="form-group"><div class="form-group" style="margin: 20px 0;">
+                            <textarea class="form-control" name="coverletter" rows="2" placeholder="cover_letter" required></textarea>
+                        </div>
+
+                        <div class="form-group"><div class="form-group" style="margin: 20px 0;">
+                            <input type="email" class="form-control" name="email" placeholder="Enter email">
+                        </div>
+
+                        <div class="form-group"><div class="form-group" style="margin: 20px 0;">
+                            <input type="file" class="form-control" name="resume">
+                        </div>
+
+                        <div class="form-group"><div class="form-group" style="margin: 20px 0;">
+                            <button type="submit" class="form-control">Submit Application</button>
+                        </div>
+
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<style>
+    .bg-purple {
+    background-color: rgb(142, 91, 223);
+}
+
+</style>
+  {% endblock %}
+

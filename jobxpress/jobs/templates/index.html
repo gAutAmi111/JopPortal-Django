@@ -1,0 +1,405 @@
+{% extends 'base.html' %} {% load static %} {% block body %}
+
+<style>
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+@keyframes text-fade-in {
+  0% { 
+    opacity: 0; 
+    transform: translateY(10px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes underline-slide {
+  0% { 
+    width: 0; 
+    left: 0; /* Start from left */
+    opacity: 0; 
+  }
+  50% { 
+    width: 100%; /* Full width at midpoint */
+    left: 0;
+    opacity: 1; 
+  }
+  100% { 
+    width: 0; /* Shrink back to 0 */
+    left: 100%; /* Move to right */
+    opacity: 0; 
+  }
+}
+
+.welcome-text {
+  position: relative;
+  display: inline-block; /* Ensures underline fits text width */
+  animation: shake 0.5s ease, text-fade-in 1s ease forwards; /* Keep shake and fade-in */
+}
+
+.welcome-text::after {
+  content: '';
+  position: absolute;
+  bottom: -5px; /* Underline position */
+  height: 3px; /* Thicker underline */
+  background: linear-gradient(to right, #5d52ba, #786ed1); /* Gradient underline */
+  animation: underline-slide 3s ease-in-out infinite; /* Continuous slide-in/out */
+  transition: background 0.3s ease; /* Smooth hover transition */
+}
+
+.welcome-text:hover::after {
+  background: linear-gradient(to right, #ff416c, #ff4b2b); /* Gradient change on hover */
+  animation: underline-grow 0.5s ease forwards; /* Revert to single grow on hover */
+}
+
+@keyframes slide-in {
+  0% {
+    transform: translateX(-100px); /* Start off-screen to the left */
+    opacity: 0; /* Start invisible */
+  }
+  100% {
+    transform: translateX(0); /* Slide to final position */
+    opacity: 1; /* Fully visible */
+  }
+}
+
+.hero-section-text h3:nth-child(1) {
+  animation: slide-in 0.8s ease-out forwards; /* First h3 */
+}
+
+.hero-section-text h5 {
+  animation: slide-in 0.8s ease-out 0.2s forwards; /* h5 with 0.2s delay */
+}
+
+.hero-section-text h3:nth-child(3) {
+  animation: slide-in 0.8s ease-out 0.4s forwards; /* Second h3 with 0.4s delay */
+}
+
+.hero-section-text a {
+  animation: slide-in 0.8s ease-out 0.6s forwards; /* Explore Jobs button with 0.6s delay */
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 5px #f1634a;
+    background-color: #ff4b2b;
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.7);
+    background-color: #2e6fcf;
+  }
+}
+
+.find-job-btn {
+  animation: pulse 1.5s ease-in-out infinite;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.find-job-btn:hover {
+  transform: scale(1.1);
+  background-color: #0056b3;
+  animation-play-state: paused;
+}
+</style>
+
+<!-- Welcome Banner -->
+<div class="container text-center mt-1">
+  {% if user.is_authenticated %}
+    <div class="alert custom-welcome-box d-inline-block px-5 py-3" role="alert">
+      <h5 class="mb-0 welcome-text" style="color:rgb(131, 132, 134); animation: shake 0.5s ease;">
+        Welcome, <strong>{{ user.username }} 👋</strong> 
+      </h5>
+    </div>
+  {% else %}
+    <div class="alert alert-light d-inline-block px-5 py-3" role="alert">
+      <h5 class="mb-0 welcome-text" style="color:rgb(131, 132, 134); animation: shake 0.5s ease;">
+        Welcome, <strong>Guest</strong> 
+      </h5>
+    </div>
+  {% endif %}
+</div>
+
+
+<main>
+  <section class="hero-section d-flex justify-content-center align-items-center">
+    <div class="section-overlay"></div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 col-12 mb-5 mb-lg-0">
+          <div class="hero-section-text mt-5">
+            <h3 class="text-white">
+              Apply here, Apply there, No response anywhere?
+            </h3>
+
+            <h5 class="hero-title text-white mt-4 mb-4">
+              Sound familiar? Not on our watch.
+            </h5>
+            <h3 class="hero-title text-white mt-4 mb-4">
+              JobXpress – Apply Smart
+            </h3>
+
+          
+
+         <a href="#job-section" class="custom-btn custom-border-btn btn" onclick="document.getElementById('job-section').scrollIntoView({ behavior: 'smooth' });">Explore Jobs</a></div>
+        </div>
+
+        <div class="col-lg-6 col-12">
+          <form class="custom-form hero-form" action="{% url 'searchbytitle' %}" method="get" role="form">
+
+            <h3 class="text-white mb-3">Search your dream job</h3>
+
+            <div class="row">
+              <div class="col-lg-6 col-md-6 col-12">
+                <div class="input-group">
+                  <span class="input-group-text" id="basic-addon1"><i class="bi-person custom-icon"></i></span>
+
+                  <input type="text" name="q" id="job-title" class="form-control" placeholder="Job Title"
+                    required />
+                </div>
+              </div>
+
+              <div class="col-lg-6 col-md-6 col-12">
+                <div class="input-group">
+                  <span class="input-group-text" id="basic-addon2"><i class="bi-geo-alt custom-icon"></i></span>
+
+                  <input type="text" name="q" id="job-location" class="form-control" placeholder="Location"
+                    required />
+                </div>
+              </div>
+
+              <div class="col-lg-12 col-12">
+                <button type="submit" class="form-control find-job-btn">Find a job</button>
+              </div>
+
+
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<br>
+<br>
+  <section class="about-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 col-12">
+          <div class="about-image-wrap custom-border-radius-start">
+            <img src="{% static 'images/professional-asian-businesswoman-gray-blazer.jpg' %}"
+              class="about-image custom-border-radius-start img-fluid" alt="" />
+
+            <div class="about-info">
+              <h6 class="text-white mb-0 me-2">Your Career</h6>
+
+              <p class="text-white mb-0">starts here!</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-12">
+          <div class="custom-text-block">
+            <h2 class="text-white mb-2">🚀 Welcome to JobXpress</h2>
+
+            <p class="text-white">
+              Your gateway to endless career possibilities! Whether you're a job
+              seeker chasing your dream role or a recruiter hunting top talent,
+              JobXpress makes the connection seamless, fast, and reliable. We
+              simplify hiring and job searching—so you can focus on success.
+            </p>
+
+            <div class="custom-border-btn-wrap d-flex align-items-center mt-5">
+              <a href="#" class="custom-btn custom-border-btn btn me-4">Get to know us</a>
+
+              <a href="#" class="custom-link smoothscroll">Explore Jobs</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-12">
+          <div class="instagram-block">
+            <img src="{% static 'images/horizontal-shot-happy-mixed-race-females.jpg' %}"
+              class="about-image custom-border-radius-end img-fluid" alt="" />
+
+            <div class="instagram-block-text">
+              <a href="https://instagram.com/" class="custom-btn btn">
+                <i class="bi-instagram"></i>
+                @JobXpress
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<section class="job-section job-featured-section section-padding" id="job-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 col-12 text-center mx-auto mb-4">
+        <h2>Recent Jobs</h2>
+        <p>
+          <strong>Explore the latest opportunities on JobXpress.</strong> 
+          New jobs are added daily—apply now to kickstart your career!
+        </p>
+      </div>
+      
+      <div>
+        {% for m in messages %}
+        <h1 class="text-center"><mark>{{m}}</mark></h1>
+        {% endfor %}
+      </div>
+
+      {% for x in allcompany %}
+      <div class="job-thumb d-flex" onclick="window.location.href=`{% url 'job_details' x.id %}`">
+        <div class="job-image-wrap bg-white shadow-lg">
+          <img src="{{ x.logo.url }}" class="job-image img-fluid" alt="">
+        </div>
+
+        <div class="job-body d-flex flex-wrap flex-auto align-items-center ms-4">
+          <div class="mb-3">
+            <h4 class="job-title mb-lg-0">
+              <a href="{% url 'job_details' x.id %}" class="job-title-link">{{ x.title }}</a>
+            </h4>
+
+            <div class="d-flex flex-wrap align-items-center">
+              <p class="job-location mb-0">
+                <i class="custom-icon bi-geo-alt me-1"></i>
+                {{ x.location }}
+              </p>
+
+              <p class="job-date mb-0">
+                <i class="custom-icon bi-clock me-1"></i>
+                {{ x.created_at }}
+              </p>
+
+              <p class="job-price mb-0">
+                <i class="custom-icon bi-cash me-1"></i>
+                ₹{{ x.salary_max }}
+              </p>
+
+              <div class="d-flex">
+                <p class="mb-0">
+                  <a href="{% url 'job_details' x.id %}" class="badge badge-level">{{ x.job_type }}</a>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="job-section-btn-wrap">
+            <a href="{% url 'applyform' x.id %}" class="custom-btn btn">Apply now</a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center">
+        <p>No jobs available at the moment. Check back soon for new opportunities!</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 col-12">
+          <div class="custom-text-block custom-border-radius-start">
+            <h2 class="text-white mb-3">
+              JobXpress – Your Gateway to Better Opportunities
+            </h2>
+
+            <p class="text-white">
+              JobXpress makes it easier than ever to land your next job. Whether
+              you're exploring new roles or posting the perfect position, we
+              connect the right people at the right time—fast, smart, and
+              hassle-free.
+            </p>
+
+            <div class="d-flex mt-4">
+              <div class="counter-thumb">
+                <div class="d-flex">
+                  <span class="counter-number" data-from="1" data-to="12" data-speed="1000"></span>
+                  <span class="counter-number-text">250K</span>
+                </div>
+
+                <span class="counter-text">Daily active users</span>
+              </div>
+
+              <div class="counter-thumb">
+                <div class="d-flex">
+                  <span class="counter-number" data-from="1" data-to="450" data-speed="1000"></span>
+                  <span class="counter-number-text">10K+</span>
+                </div>
+
+                <span class="counter-text">Opening jobs</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-12">
+          <div class="video-thumb">
+            <img src="{% static 'images/people-working-as-team-company.jpg' %}"
+              class="about-image custom-border-radius-end img-fluid" alt="" />
+
+            <div class="video-info">
+              <a href="https://www.youtube.com/@jobxpressindia1843" class="youtube-icon bi-youtube"></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<br>
+<br><br>
+
+  <section class="cta-section">
+    <div class="section-overlay"></div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 col-10">
+          <h2 class="text-white mb-2">Over 10k opening jobs</h2>
+
+          <p class="text-white">
+JobXpress – Your #1 Job Portal!
+Find your dream job or the perfect hire. Fast, reliable, and easy—JobXpress delivers opportunities that matter.
+          </p>
+        </div>
+
+        <div class="col-lg-4 col-12 ms-auto">
+          <div class="custom-border-btn-wrap d-flex align-items-center mt-lg-4 mt-2">
+            <a href="#" class="custom-btn custom-border-btn btn me-4">Create an account</a>
+
+            <a href="#" class="custom-link">Post a job</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+    // If there is a query parameter, scroll to the search results
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('q')) {
+        const resultsSection = document.getElementById('job-section');
+        if (resultsSection) {
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+</script>
+
+{% endblock %}
